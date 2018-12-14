@@ -2,15 +2,15 @@ package com.htbeyond.studying.controller
 
 import com.htbeyond.studying.model.Todo
 import com.htbeyond.studying.repository.TodoRepository
+import com.htbeyond.studying.service.TestClientService
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
-import java.util.concurrent.atomic.AtomicLong
 import javax.validation.Valid
 
 @RestController
 @RequestMapping("/basic")
-class TodoContorller(private val todoRepository: TodoRepository) {
+class TodoContorller(private val todoRepository: TodoRepository, private val testClientService: TestClientService) {
 
     @PostMapping("/todos")
     fun createTodo(@Valid @RequestBody todo: Todo) = todoRepository.save(todo)
@@ -39,6 +39,11 @@ class TodoContorller(private val todoRepository: TodoRepository) {
             todoRepository.delete(todo)
             ResponseEntity<Void>(HttpStatus.NO_CONTENT)
         }.orElse(ResponseEntity.notFound().build())
+    }
+
+    @GetMapping("/test")
+    fun test(): ResponseEntity<Map<String, String>> {
+        return ResponseEntity.ok(testClientService.getTestInfo())
     }
 
 }
